@@ -38,3 +38,12 @@ def obtener_libro(titulo: str):
         if libro.titulo == titulo:
             return libro
     raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+
+@app.put("/libros/{titulo}")
+def reemplazar_libro(titulo: str, libro_nuevo: Libro):
+    for i in range(len(libros)):
+        if libros[i].titulo == titulo:
+            libros[i] = libro_nuevo
+            return libro_nuevo
+    raise HTTPException(status_code=404, detail="Libro no encontrado")
