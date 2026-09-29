@@ -38,8 +38,14 @@ def raiz():
 
 
 @app.get("/libros")
-def listar_libros():
-    return libros
+def listar_libros(paginas_min: int | None = None):
+    if paginas_min is None:
+        return libros
+    filtrados = []
+    for libro in libros:
+        if libro.paginas >= paginas_min:
+            filtrados.append(libro)
+    return filtrados
 
 
 @app.post("/libros", status_code=201)
