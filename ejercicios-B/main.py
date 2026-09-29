@@ -4,9 +4,15 @@ from pydantic import BaseModel, Field
 app = FastAPI()
 
 
+class Editorial(BaseModel):
+    nombre: str
+    pais: str
+
+
 class Libro(BaseModel):
     titulo: str
     paginas: int = Field(gt=0)
+    editorial: Editorial | None = None
 
 
 class Autor(BaseModel):
