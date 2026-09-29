@@ -31,3 +31,13 @@ Cuando el borrado sale bien devuelvo `204 (No Content)`: la operación se hizo
 y no hay nada útil para devolver (el libro ya no existe), y por definición un
 204 no lleva cuerpo. Si el libro no existe devuelvo `404`. Después de borrar,
 un GET a ese título da 404.
+
+
+## B8 - Validación propia de `paginas`
+
+Un libro con `paginas` menor o igual a 0 se rechaza con `422`, usando
+`Field(gt=0)` en el modelo. Elegí 422 y no 400 porque el JSON está bien armado
+y el campo tiene el tipo correcto (un entero), pero el valor no cumple el
+contrato del modelo. El cuerpo de la respuesta explica el motivo:
+`Input should be greater than 0`.
+

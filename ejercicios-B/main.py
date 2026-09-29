@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
 class Libro(BaseModel):
     titulo: str
-    paginas: int
+    paginas: int = Field(gt=0)
 
 
 libros = [
