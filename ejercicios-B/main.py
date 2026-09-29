@@ -9,10 +9,20 @@ class Libro(BaseModel):
     paginas: int = Field(gt=0)
 
 
+class Autor(BaseModel):
+    nombre: str
+    pais: str
+
+
 libros = [
     Libro(titulo="El Aleph", paginas=180),
     Libro(titulo="Rayuela", paginas=600),
     Libro(titulo="Ficciones", paginas=200),
+]
+
+autores = [
+    Autor(nombre="Jorge Luis Borges", pais="Argentina"),
+    Autor(nombre="Julio Cortazar", pais="Argentina"),
 ]
 
 
@@ -56,3 +66,14 @@ def borrar_libro(titulo: str):
             libros.pop(i)
             return Response(status_code=204)
     raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+
+@app.get("/autores")
+def listar_autores():
+    return autores
+
+
+@app.post("/autores", status_code=201)
+def crear_autor(autor: Autor):
+    autores.append(autor)
+    return autor
