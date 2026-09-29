@@ -41,3 +41,12 @@ y el campo tiene el tipo correcto (un entero), pero el valor no cumple el
 contrato del modelo. El cuerpo de la respuesta explica el motivo:
 `Input should be greater than 0`.
 
+
+## B12 - Valores por defecto y `response_model`
+
+`disponible: bool = True` es un valor por defecto: si el POST no manda ese
+campo, el modelo lo asume `True`. `response_model` sirve para indicarle a
+FastAPI qué forma tiene la respuesta y filtrar lo que se devuelve: si el objeto
+interno tiene un campo que no debe salir (por ejemplo un precio de costo), un
+`response_model` sin ese campo evita que se filtre al cliente.
+

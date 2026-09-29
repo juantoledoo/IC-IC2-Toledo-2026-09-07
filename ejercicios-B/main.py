@@ -12,6 +12,7 @@ class Editorial(BaseModel):
 class Libro(BaseModel):
     titulo: str
     paginas: int = Field(gt=0)
+    disponible: bool = True
     editorial: Editorial | None = None
 
 
