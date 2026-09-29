@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -46,4 +46,13 @@ def reemplazar_libro(titulo: str, libro_nuevo: Libro):
         if libros[i].titulo == titulo:
             libros[i] = libro_nuevo
             return libro_nuevo
+    raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+
+@app.delete("/libros/{titulo}", status_code=204)
+def borrar_libro(titulo: str):
+    for i in range(len(libros)):
+        if libros[i].titulo == titulo:
+            libros.pop(i)
+            return Response(status_code=204)
     raise HTTPException(status_code=404, detail="Libro no encontrado")
