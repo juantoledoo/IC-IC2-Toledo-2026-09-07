@@ -15,8 +15,16 @@ def crear_libro(libro):
     return requests.post(f"{BASE_URL}/libros", json=libro)
 
 
+def reemplazar_libro(titulo, libro):
+    return requests.put(f"{BASE_URL}/libros/{titulo}", json=libro)
+
+
+def borrar_libro(titulo):
+    return requests.delete(f"{BASE_URL}/libros/{titulo}")
+
+
 def describir(respuesta):
-    if respuesta.status_code in (200, 201):
+    if respuesta.status_code in (200, 201, 204):
         return "ok"
     if respuesta.status_code == 422:
         return "dato inválido"
@@ -25,13 +33,24 @@ def describir(respuesta):
     return f"respuesta inesperada ({respuesta.status_code})"
 
 
+def mostrar(nombre, respuesta):
+    print(f"{nombre}: {describir(respuesta)} (código {respuesta.status_code})")
+
+
 if __name__ == "__main__":
-    casos = [
-        ("Crear libro válido", crear_libro({"titulo": "Bestiario", "paginas": 150})),
-        ("Crear libro con 0 páginas", crear_libro({"titulo": "Vacio", "paginas": 0})),
-        ("Buscar libro inexistente", obtener_libro("NoExiste")),
-        ("Listar libros", listar_libros()),
-    ]
-    for nombre, respuesta in casos:
-        print(f"{nombre}: {describir(respuesta)} (código {respuesta.status_code})")
-         
+    libro = {"titulo": "Cliente Demo", "paginas": 100}
+
+    mostrar("Crear", crear_libro(libro))
+
+    respuesta = listar_libros()
+    titulos = [item["titulo"] for item in respuesta.json()]
+    print("Títulos en la API:", titulos)
+
+    libro_nuevo = {"titulo": "Cliente Demo", "paginas": 200}
+    respuesta = reemplazar_libro("Cliente Demo", libro_nuevo)
+    mostrar("Reemplazar", respuesta)
+    print("Quedó así:", respuesta.json())
+
+    mostrar("Borrar", borrar_libro("Cliente Demo"))
+    mostrar("Buscar después de borrar", obtener_libro("Cliente Demo"))
+           
