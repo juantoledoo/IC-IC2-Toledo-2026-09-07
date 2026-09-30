@@ -53,3 +53,13 @@ Detalle al atrapar excepciones: `ConnectTimeout` hereda tanto de `Timeout` como
 de `ConnectionError`. Por eso en `pedir` el `except` de `Timeout` va antes que
 el de `ConnectionError`; si no, un timeout de conexión se mostraría como "no se
 pudo conectar".
+
+
+## C8 - Session
+
+`requests.get`/`requests.post` sueltos abren una conexión nueva con el servidor
+en cada pedido. Una `requests.Session()` mantiene la conexión abierta y la
+reutiliza en los pedidos siguientes al mismo servidor, así que se ahorra ese
+trabajo cada vez. Con muchos pedidos seguidos se nota: en `c8_medicion.py`, con
+Session los 200 pedidos tardaron menos que sin ella.
+

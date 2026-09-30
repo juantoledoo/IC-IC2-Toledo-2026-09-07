@@ -3,10 +3,12 @@ import requests
 BASE_URL = "http://127.0.0.1:8000"
 TIMEOUT = 5
 
+sesion = requests.Session()
+
 
 def pedir(metodo, ruta, **kwargs):
     try:
-        return requests.request(metodo, f"{BASE_URL}{ruta}", timeout=TIMEOUT, **kwargs)
+        return sesion.request(metodo, f"{BASE_URL}{ruta}", timeout=TIMEOUT, **kwargs)
     except requests.exceptions.Timeout:
         print("La API tardó demasiado en responder (timeout).")
         return None
@@ -70,4 +72,4 @@ if __name__ == "__main__":
 
     mostrar("Borrar", borrar_libro("Cliente Demo"))
     mostrar("Buscar después de borrar", obtener_libro("Cliente Demo"))
-    
+      
