@@ -3,24 +3,32 @@ import requests
 BASE_URL = "http://127.0.0.1:8000"
 
 
+def pedir(metodo, ruta, **kwargs):
+    try:
+        return requests.request(metodo, f"{BASE_URL}{ruta}", **kwargs)
+    except requests.exceptions.ConnectionError:
+        print("No se pudo conectar con la API. ¿Está levantada?")
+        return None
+
+
 def listar_libros():
-    return requests.get(f"{BASE_URL}/libros")
+    return pedir("GET", "/libros")
 
 
 def obtener_libro(titulo):
-    return requests.get(f"{BASE_URL}/libros/{titulo}")
+    return pedir("GET", f"/libros/{titulo}")
 
 
 def crear_libro(libro):
-    return requests.post(f"{BASE_URL}/libros", json=libro)
+    return pedir("POST", "/libros", json=libro)
 
 
 def reemplazar_libro(titulo, libro):
-    return requests.put(f"{BASE_URL}/libros/{titulo}", json=libro)
+    return pedir("PUT", f"/libros/{titulo}", json=libro)
 
 
 def borrar_libro(titulo):
-    return requests.delete(f"{BASE_URL}/libros/{titulo}")
+    return pedir("DELETE", f"/libros/{titulo}")
 
 
 def describir(respuesta):
@@ -34,13 +42,18 @@ def describir(respuesta):
 
 
 def mostrar(nombre, respuesta):
+    if respuesta is None:
+        return
     print(f"{nombre}: {describir(respuesta)} (código {respuesta.status_code})")
 
 
 if __name__ == "__main__":
     libro = {"titulo": "Cliente Demo", "paginas": 100}
 
-    mostrar("Crear", crear_libro(libro))
+    respuesta = crear_libro(libro)
+    mostrar("Crear", respuesta)
+    if respuesta is None:
+        raise SystemExit("Sin conexión: se cancela la demo.")
 
     respuesta = listar_libros()
     titulos = [item["titulo"] for item in respuesta.json()]
@@ -53,4 +66,4 @@ if __name__ == "__main__":
 
     mostrar("Borrar", borrar_libro("Cliente Demo"))
     mostrar("Buscar después de borrar", obtener_libro("Cliente Demo"))
-           
+       

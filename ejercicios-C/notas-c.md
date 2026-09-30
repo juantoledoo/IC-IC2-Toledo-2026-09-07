@@ -25,3 +25,12 @@ Otros dos errores típicos que quedaron probados:
   `requests` lanza `ConnectionError`.
 
 La URL, el puerto y el path tienen que coincidir exactamente con los de la API.
+
+
+## C6 - Cuando la API no está levantada
+
+Con el servidor apagado, `requests` lanza `requests.exceptions.ConnectionError`
+(el traceback termina con "Max retries exceeded ... Failed to establish a new
+connection"). Lo atrapo con un `try/except` en la función `pedir`, que imprime
+"No se pudo conectar con la API. ¿Está levantada?" y devuelve `None`, en vez
+de dejar que el script explote.
